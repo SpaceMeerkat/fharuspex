@@ -1,5 +1,5 @@
 use std::io::Result;
-use faruspex::header_reader::reader::open_header;
+use fharuspex::header_reader::reader::open_header;
 
 fn main() -> Result<()> {
     // Declare the filepath
