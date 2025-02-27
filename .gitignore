@@ -1,0 +1,39 @@
+# Target folder (compiled output)
+target/
+
+# Rust package manager files
+Cargo.lock
+
+# Rust build artifacts
+**/*.rs.bk
+
+# IDE and editor files
+.idea/
+.vscode/
+*.iml
+
+# Temporary files
+*.swp
+*.swo
+*.bak
+
+# Debugging files
+*.log
+
+# Binary files
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+*.o
+
+# Coverage and profiling files
+*.profraw
+
+# MacOS and Linux system files
+.DS_Store
+Thumbs.db
+
+# Generated documentation
+doc/
