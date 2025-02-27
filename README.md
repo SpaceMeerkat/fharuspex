@@ -1,4 +1,4 @@
-<p align="center">
+<p align="right">
   <img src="meta/ferris.jpg" width=200 />
 </p>
 
