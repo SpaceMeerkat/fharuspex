@@ -1,5 +1,5 @@
-<p align="center">
-  <img src="meta/ferris.jpg" width=640 />
+<p align="right">
+  <img src="meta/ferris.jpg" width=200 />
 </p>
 
 # fharuspex
