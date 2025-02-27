@@ -1,9 +1,9 @@
 use std::fs::File;
-use std::io::{self, BufReader, Read};
+use std::io::{BufReader, Read, Result};
 
 // Reads the first 2880 bytes (header).
 
-fn main() -> io::Result<()>{
+fn main() -> Result<()>{
     // Declare the filepath
     let file_path: &str = "datasets/example.fits";
     println!("Filename set to {}.", &file_path);
