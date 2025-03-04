@@ -1,4 +1,4 @@
-use binrw::{BinRead, BinResult, Endian};
+use binrw::{BinRead, BinResult};
 use std::fs::File;
 use std::io::{BufReader};
 
