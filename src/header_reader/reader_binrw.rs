@@ -1,6 +1,6 @@
-use binrw::{binrw, BinRead, BinResult, Endian};
+use binrw::{BinRead, BinResult, Endian};
 use std::fs::File;
-use std::io::{BufReader, Read, Seek};
+use std::io::{BufReader};
 
 #[binrw::parser(reader)] // Headers are ASCII, so endian is needed
 pub fn parse_cards() -> BinResult<Vec<(String, String)>> {
@@ -8,7 +8,7 @@ pub fn parse_cards() -> BinResult<Vec<(String, String)>> {
     let endian = Endian::Big;
 
     loop {
-        let mut card_bytes = match <[u8; 80]>::read_options(reader, endian, ()) { // Read 80 bytes
+        let card_bytes = match <[u8; 80]>::read_options(reader, endian, ()) { // Read 80 bytes
             Ok(card_bytes) => card_bytes,
             Err(err) => {
                 eprintln!("Error reading 80 bytes into buffer: {}", err);
@@ -32,7 +32,7 @@ pub fn parse_cards() -> BinResult<Vec<(String, String)>> {
 
 #[derive(BinRead)]
 #[derive(Debug)]
-#[br(big)]
+// #[br(big)]
 pub struct FitsHeader {
     #[br(parse_with = parse_cards)]
     pub cards: Vec<(String, String)>,
