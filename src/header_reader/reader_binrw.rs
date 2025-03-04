@@ -2,10 +2,10 @@ use binrw::{BinRead, BinResult, Endian};
 use std::fs::File;
 use std::io::{BufReader};
 
-#[binrw::parser(reader)] // Headers are ASCII, so endian is needed
+#[binrw::parser(reader, endian)] // Headers are ASCII, so endian is needed
 pub fn parse_cards() -> BinResult<Vec<(String, String)>> {
     let mut headers = Vec::new(); // Fill vector with header key:value pairs
-    let endian = Endian::Big;
+    // let endian = Endian::Big; // This feels icky
 
     loop {
         let card_bytes = match <[u8; 80]>::read_options(reader, endian, ()) { // Read 80 bytes
@@ -32,7 +32,7 @@ pub fn parse_cards() -> BinResult<Vec<(String, String)>> {
 
 #[derive(BinRead)]
 #[derive(Debug)]
-// #[br(big)]
+#[br(big)]
 pub struct FitsHeader {
     #[br(parse_with = parse_cards)]
     pub cards: Vec<(String, String)>,
@@ -50,7 +50,7 @@ pub fn open_header_binrw(file_path: &str) -> BinResult<FitsHeader> {
     let mut fits_reader = BufReader::new(file); // Create a new buffer from file
     
     // Read the header, passing Endian::Big for endian and an empty tuple for options
-    let headers = match FitsHeader::read_options(&mut fits_reader, Endian::Big, ()) {
+    let headers = match FitsHeader::read(&mut fits_reader) {
         Ok(headers) => headers,
         Err(err) => {
             eprintln!("Error creating the header: {}", err);
