@@ -1,6 +1,7 @@
 use std::io::Result;
 use fharuspex::header_reader::reader::open_header;
 use fharuspex::header_reader::reader_binrw::open_header_binrw;
+use fharuspex::data_reader::reader::open_data_chunk;
 
 fn main() -> Result<()> {
 
@@ -23,6 +24,13 @@ fn main() -> Result<()> {
     for (key, value) in header_cards {
         println!("{} = {}", key, value);
     }
+
+    let header_offset = 2880;
+    let offset = 3 * 8; // User specified 
+    let size = 2;
+    let bitpix = -64;
+    let data_values = open_data_chunk(file_path, offset + header_offset, size);
+    println!("Data vector read as: {:?}", data_values);
     
     Ok(())
 }
