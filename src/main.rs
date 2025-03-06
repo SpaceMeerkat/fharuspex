@@ -1,6 +1,7 @@
 use std::io::Result;
 use fharuspex::header_reader::reader::open_header;
 use fharuspex::header_reader::reader_binrw::open_header_binrw;
+use fharuspex::data_reader::reader::open_data_chunk;
 
 fn main() -> Result<()> {
 
