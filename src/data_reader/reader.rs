@@ -29,7 +29,7 @@ pub fn parse_chunk(offset: u8, size: u8) -> BinResult<Vec<u8>> {
         };
         
         // let value = i32::from_be_bytes(bytes);
-        println!("Found i32 value of: {:?}", value);
+        println!("Found u8 value of: {:?}", value);
         chunk_buffer.push(value);
     }
 
