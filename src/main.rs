@@ -28,6 +28,7 @@ fn main() -> Result<()> {
     let header_offset = 2880;
     let offset = 3 * 8; // User specified 
     let size = 2;
+    let bitpix = -64;
     let data_values = open_data_chunk(file_path, offset + header_offset, size);
     println!("Data vector read as: {:?}", data_values);
     
