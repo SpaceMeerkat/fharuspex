@@ -2,58 +2,40 @@ use binrw::{BinRead, BinResult};
 use std::fs::File;
 use std::io::{BufReader, SeekFrom};
 
-
 #[binrw::parser(reader, endian)]
-pub fn parse_chunk(offset: u8, size: u8) -> BinResult<Vec<u8>> {
-    let mut chunk_buffer = Vec::new();
+pub fn parse_chunk(args: ChunkArgs) -> BinResult<Vec<f64>> { // numpy array is using float64-bit
+    let mut chunk_vector = Vec::new();
 
-    match reader.seek(SeekFrom::Start(offset as u64)) {
-        Ok(_) => {},
-        Err(err) => {
-            eprintln!("Error starting bufreader at offset position: {}", offset);
-            panic!("Terminating due to bufreader positional error: {}", err);
-        }
-    };
+    reader.seek(SeekFrom::Start(args.offset))?;
 
-    reader.read_exact(&mut chunk_buffer); // Reads the exact number of bytes required to fill buffer
-
-    let num_elements = size as usize / 4;
-
-    for _ in 0..num_elements {
-        let bytes = match <[u8; 4]>::read_options(reader, endian, ()) { // Read 4 bytes
-            Ok(bytes) => bytes,
-            Err(err) => {
-                eprintln!("Error parsing 4 bytes from buffer: {}", err);
-                panic!("Terminating due to buffer value parsing.");
-            }
-        };
-        
-        // let value = i32::from_be_bytes(bytes);
-        println!("Found u8 value of: {:?}", value);
-        chunk_buffer.push(value);
+    for _ in 0..args.size {
+        let value = f64::read_options(reader, endian, ())?;
+        // BinRead automatically advances the BufReader position (8 bits [64 floating point value] at a time)
+        chunk_vector.push(value);
     }
 
-    Ok(chunk_buffer)
+    Ok(chunk_vector)
 }
 
-#[derive(BinRead)]
-#[derive(Debug)]
-#[br(big)]
+#[derive(BinRead, Debug)]
+#[br(big, import(args: ChunkArgs))] // Importing the offset and size from ChunkArgs struct
 pub struct DataChunk {
-    #[br(parse with parse_chunk)]
-    pub chunk: Vec<u8>,
+    #[br(parse_with = parse_chunk, args(args))]
+    pub chunk: Vec<f64>,
 }
 
-pub fn open_data_chunk(file_path: &str, offset: u8, size: u8) -> BinResult<DataChunk> {
+#[derive(Debug, Clone, Copy)]
+pub struct ChunkArgs {
+    pub offset: u64,
+    pub size: usize,
+}
+
+pub fn open_data_chunk(file_path: &str, offset: u64, size: usize) -> BinResult<DataChunk> {
     let file = File::open(file_path)?;
+    let mut fits_reader = BufReader::new(file);
 
-    let fits_reader = BufReader::new(file);
+    let args = ChunkArgs { offset, size };
+    let data_chunk = DataChunk::read_options(&mut fits_reader, binrw::Endian::Big, (args,))?; // read_options expects ags as a single length tuple
 
-    let data_chunk = match DataChunk::read(&mut fits_reader) {
-        Ok(data_chunk) => data_chunk,
-        Err(err) => {
-            eprintln!("Error running DataChunk reading from file: `{}`", file_path);
-            panic!("Terminating DataChunk reading with error: {}", err);
-        },
-    };
+    Ok(data_chunk)
 }

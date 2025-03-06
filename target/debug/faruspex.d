@@ -1,1 +1,0 @@
-/home/jdawson/repos/faruspex/target/debug/faruspex: /home/jdawson/repos/faruspex/src/data_reader/mod.rs /home/jdawson/repos/faruspex/src/header_reader/mod.rs /home/jdawson/repos/faruspex/src/header_reader/reader.rs /home/jdawson/repos/faruspex/src/lib.rs /home/jdawson/repos/faruspex/src/main.rs
