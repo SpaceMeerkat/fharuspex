@@ -1,6 +1,7 @@
 use binrw::{BinRead, BinResult};
 use std::fs::File;
 use std::io::{BufReader, SeekFrom};
+use crate::header_reader::reader_axes::open_header_axes;
 
 #[binrw::parser(reader, endian)]
 pub fn parse_chunk(args: ChunkArgs) -> BinResult<Vec<f64>> { // numpy array is using float64-bit
