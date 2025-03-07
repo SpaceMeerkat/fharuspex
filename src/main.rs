@@ -1,6 +1,5 @@
 use std::io::Result;
-use fharuspex::header_reader::reader::open_header;
-use fharuspex::header_reader::reader_binrw::open_header_binrw;
+use fharuspex::header_reader::{reader::open_header, reader_binrw::open_header_binrw, reader_axes::open_header_axes};
 use fharuspex::data_reader::reader::open_data_chunk;
 
 fn main() -> Result<()> {
@@ -21,6 +20,15 @@ fn main() -> Result<()> {
     let header_cards = &headers_binrw.cards;  // Access the cards field
     // Iterate over the cards and print each key-value pair on a new line
     println!("\n\nHeader opened using binrw: \n");
+    for (key, value) in header_cards {
+        println!("{} = {}", key, value);
+    }
+
+    // Open the header axes with binrw
+    let headers_binrw = open_header_axes(file_path).unwrap();  // Assuming this returns a FitsHeader
+    let header_cards = &headers_binrw.cards;  // Access the cards field
+    // Iterate over the cards and print each key-value pair on a new line
+    println!("\n\nHeader axes opened using binrw: \n");
     for (key, value) in header_cards {
         println!("{} = {}", key, value);
     }
