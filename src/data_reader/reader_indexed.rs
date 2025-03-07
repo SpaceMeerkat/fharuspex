@@ -31,8 +31,20 @@ pub struct ChunkArgs {
     pub size: usize,
 }
 
-pub fn open_data_chunk(file_path: &str, offset: u64, size: usize) -> BinResult<DataChunk> {
+pub fn open_data_chunk_indexed(file_path: &str, offset: u64, size: usize) -> BinResult<DataChunk> {
     let file = File::open(file_path)?;
+
+    let headers_binrw = open_header_axes(file_path).unwrap();  // Assuming this returns a FitsHeader
+    let header_cards = &headers_binrw.cards;  // Access the cards field
+
+    let first_axis: u8 = header_cards[0].1.parse().expect("Failed to parse first value");
+    let second_axis: u8 = header_cards[1].1.parse().expect("Failed to parse second value");
+
+    let strides = vec![first_axis * second_axis, second_axis];
+    println!("Strides set to: {:?}", strides);
+
+    // Setup to take a rows:cols range and use that to stride over the bytes and keep the necessary ones
+
     let mut fits_reader = BufReader::new(file);
 
     let args = ChunkArgs { offset, size };
