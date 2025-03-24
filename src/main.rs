@@ -33,12 +33,19 @@ fn main() -> Result<()> {
         println!("{} = {}", key, value);
     }
 
+    // Open the data chunk with binrw, without contiguous indexing
     let header_offset = 2880;
     let offset = 3 * 8; // User specified 
     let size = 2;
     let bitpix = -64;
     let data_values = open_data_chunk(file_path, offset + header_offset, size);
     println!("Data vector read as: {:?}", data_values);
+
+    // Open a data chunk with binrw using contiguous indexing and row col ranges
+    let row_range = 10..13;
+    let col_range = 28..30;
+    let indexed_data_values = open_data_chunk_indexed(file_path, header_offset, row_range, col_range);
+    println!("Data vector using indexing stride: {:?}", indexed_data_values);
     
     Ok(())
 }
